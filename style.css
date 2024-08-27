@@ -1,0 +1,102 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+header button:hover {
+    background-color: #0056b3;
+}
+
+main section {
+    margin: 20px 0;
+}
+
+section h2 {
+    margin-bottom: 10px;
+}
+
+#postForm textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+#postForm button {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#postForm button:hover {
+    background-color: #218838;
+}
+
+#postList, #friendRequestList, #notificationList {
+    list-style: none;
+    padding: 0;
+}
+
+#postList li, #friendRequestList li, #notificationList li {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.likeBtn, .commentBtn, .acceptBtn, .rejectBtn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.likeBtn:hover, .commentBtn:hover, .acceptBtn:hover, .rejectBtn:hover {
+    background-color: #0056b3;
+}
+
+.newComment {
+    width: calc(100% - 20px);
+    padding: 5px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}

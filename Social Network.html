@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Network</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Social Network</h1>
+            <button id="logoutBtn">Logout</button>
+        </header>
+        <main>
+            <section id="profile">
+                <h2>Profile</h2>
+                <p><strong>Name:</strong> <span id="userName">Samiullah Samsoor</span></p>
+                <p><strong>Email:</strong> <span id="userEmail">sasmoorsami2@gmail.com</span></p>
+                <button id="editProfileBtn">Edit Profile</button>
+            </section>
+            <section id="posts">
+                <h2>Posts</h2>
+                <form id="postForm">
+                    <textarea id="newPost" placeholder="What's on your mind?"></textarea>
+                    <button type="submit">Post</button>
+                </form>
+                <ul id="postList">
+                    <!-- Posts will be added here -->
+                </ul>
+            </section>
+            <section id="friendRequests">
+                <h2>Friend Requests</h2>
+                <ul id="friendRequestList">
+                    <!-- Friend requests will be added here -->
+                </ul>
+            </section>
+            <section id="notifications">
+                <h2>Notifications</h2>
+                <ul id="notificationList">
+                    <!-- Notifications will be added here -->
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const postForm = document.getElementById('postForm');
+            const postList = document.getElementById('postList');
+            const friendRequestList = document.getElementById('friendRequestList');
+            const notificationList = document.getElementById('notificationList');
+
+            postForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newPostContent = document.getElementById('newPost').value;
+                if (newPostContent) {
+                    addPost(newPostContent);
+                    document.getElementById('newPost').value = '';
+                }
+            });
+
+            function addPost(content) {
+                const postItem = document.createElement('li');
+                postItem.innerHTML = `
+                    <p>${content}</p>
+                    <button class="likeBtn">Like</button>
+                    <button class="commentBtn">Comment</button>
+                    <ul class="commentList"></ul>
+                    <input type="text" class="newComment" placeholder="Write a comment...">
+                `;
+                postList.appendChild(postItem);
+
+                const likeBtn = postItem.querySelector('.likeBtn');
+                const commentBtn = postItem.querySelector('.commentBtn');
+                const commentList = postItem.querySelector('.commentList');
+                const newCommentInput = postItem.querySelector('.newComment');
+
+                likeBtn.addEventListener('click', () => {
+                    likeBtn.textContent = likeBtn.textContent === 'Like' ? 'Unlike' : 'Like';
+                });
+
+                commentBtn.addEventListener('click', () => {
+                    if (newCommentInput.value) {
+                        const commentItem = document.createElement('li');
+                        commentItem.textContent = newCommentInput.value;
+                        commentList.appendChild(commentItem);
+                        newCommentInput.value = '';
+                    }
+                });
+            }
+
+            function addFriendRequest(name) {
+                const requestItem = document.createElement('li');
+                requestItem.innerHTML = `
+                    <p>${name}</p>
+                    <button class="acceptBtn">Accept</button>
+                    <button class="rejectBtn">Reject</button>
+                `;
+                friendRequestList.appendChild(requestItem);
+
+                const acceptBtn = requestItem.querySelector('.acceptBtn');
+                const rejectBtn = requestItem.querySelector('.rejectBtn');
+
+                acceptBtn.addEventListener('click', () => {
+                    requestItem.remove();
+                    addNotification(`${name} is now your friend!`);
+                });
+
+                rejectBtn.addEventListener('click', () => {
+                    requestItem.remove();
+                });
+            }
+
+            function addNotification(message) {
+                const notificationItem = document.createElement('li');
+                notificationItem.textContent = message;
+                notificationList.appendChild(notificationItem);
+            }
+
+            // Sample data
+            addPost('Welcome to the social network!');
+            addFriendRequest('Samiullah Samsoor');
+        });
+    </script>
+</body>
+</html>
