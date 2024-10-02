@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crowdfunding Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Crowdfunding Platform</h1>
+    </header>
+
+    <main>
+        <!-- Create Project Form -->
+        <section id="create-project">
+            <h2>Create a New Project</h2>
+            <form id="project-form">
+                <label for="project-title">Project Title:</label>
+                <input type="text" id="project-title" name="project-title" required>
+
+                <label for="project-description">Description:</label>
+                <textarea id="project-description" name="project-description" required></textarea>
+
+                <label for="funding-goal">Funding Goal ($):</label>
+                <input type="number" id="funding-goal" name="funding-goal" min="1" required>
+
+                <button type="submit">Create Project</button>
+            </form>
+        </section>
+
+        <!-- Projects List -->
+        <section id="projects">
+            <h2>All Projects</h2>
+            <div id="projects-list">
+                <!-- Projects will be dynamically inserted here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Crowdfunding Platform</p>
+    </footer>
+
+    <!-- Modal for Contributions -->
+    <div id="contribution-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Contribute to <span id="modal-project-title"></span></h2>
+            <form id="contribution-form">
+                <label for="contribution-amount">Amount ($):</label>
+                <input type="number" id="contribution-amount" name="contribution-amount" min="1" required>
+
+                <label for="contribution-name">Your Name:</label>
+                <input type="text" id="contribution-name" name="contribution-name" required>
+
+                <button type="submit">Contribute</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Project Updates -->
+    <div id="update-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Update Project <span id="update-project-title"></span></h2>
+            <form id="update-form">
+                <label for="update-content">Update:</label>
+                <textarea id="update-content" name="update-content" required></textarea>
+
+                <button type="submit">Post Update</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Code
+
+        // Helper Functions
+        function getProjects() {
+            const projects = localStorage.getItem('projects');
+            return projects ? JSON.parse(projects) : [];
+        }
+
+        function saveProjects(projects) {
+            localStorage.setItem('projects', JSON.stringify(projects));
+        }
+
+        function renderProjects() {
+            const projectsList = document.getElementById('projects-list');
+            projectsList.innerHTML = '';
+            const projects = getProjects();
+            projects.forEach(project => {
+                const projectElem = document.createElement('div');
+                projectElem.classList.add('project');
+
+                const progressPercentage = Math.min((project.funded / project.goal) * 100, 100).toFixed(2);
+
+                projectElem.innerHTML = `
+                    <h3>${project.title}</h3>
+                    <p>${project.description}</p>
+                    <p>Funding Goal: $${project.goal}</p>
+                    <p>Funded: $${project.funded}</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${progressPercentage}%;"></div>
+                    </div>
+                    <button class="contribute-button" data-id="${project.id}">Contribute</button>
+                    <button class="update-button" data-id="${project.id}">Post Update</button>
+                    <div class="updates">
+                        <h4>Updates:</h4>
+                        <ul>
+                            ${project.updates.map(update => `<li>${update}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                projectsList.appendChild(projectElem);
+            });
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            const contributeButtons = document.querySelectorAll('.contribute-button');
+            contributeButtons.forEach(button => {
+                button.addEventListener('click', openContributionModal);
+            });
+
+            const updateButtons = document.querySelectorAll('.update-button');
+            updateButtons.forEach(button => {
+                button.addEventListener('click', openUpdateModal);
+            });
+        }
+
+        // Create Project
+        const projectForm = document.getElementById('project-form');
+        projectForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('project-title').value;
+            const description = document.getElementById('project-description').value;
+            const goal = parseFloat(document.getElementById('funding-goal').value);
+
+            const projects = getProjects();
+            const newProject = {
+                id: Date.now(),
+                title,
+                description,
+                goal,
+                funded: 0,
+                updates: []
+            };
+            projects.push(newProject);
+            saveProjects(projects);
+            projectForm.reset();
+            renderProjects();
+        });
+
+        // Contribution Modal
+        const contributionModal = document.getElementById('contribution-modal');
+        const modalProjectTitle = document.getElementById('modal-project-title');
+        let currentProjectId = null;
+
+        function openContributionModal(e) {
+            const projectId = parseInt(e.target.getAttribute('data-id'));
+            const projects = getProjects();
+            const project = projects.find(p => p.id === projectId);
+            if (project) {
+                currentProjectId = projectId;
+                modalProjectTitle.textContent = project.title;
+                contributionModal.style.display = 'block';
+            }
+        }
+
+        // Update Modal
+        const updateModal = document.getElementById('update-modal');
+        const updateProjectTitle = document.getElementById('update-project-title');
+        let currentUpdateProjectId = null;
+
+        function openUpdateModal(e) {
+            const projectId = parseInt(e.target.getAttribute('data-id'));
+            const projects = getProjects();
+            const project = projects.find(p => p.id === projectId);
+            if (project) {
+                currentUpdateProjectId = projectId;
+                updateProjectTitle.textContent = project.title;
+                updateModal.style.display = 'block';
+            }
+        }
+
+        // Close Modals
+        const closeButtons = document.querySelectorAll('.close-button');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                contributionModal.style.display = 'none';
+                updateModal.style.display = 'none';
+            });
+        });
+
+        // Handle Contribution
+        const contributionForm = document.getElementById('contribution-form');
+        contributionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('contribution-amount').value);
+            const name = document.getElementById('contribution-name').value;
+
+            if (amount <= 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+
+            // Simulate payment processing
+            // In a real application, integrate with a payment gateway here
+
+            const projects = getProjects();
+            const project = projects.find(p => p.id === currentProjectId);
+            if (project) {
+                project.funded += amount;
+                // Optionally, store contributor information
+                // For simplicity, we're not storing contributor details
+                saveProjects(projects);
+                renderProjects();
+                alert(`Thank you, ${name}, for your contribution of $${amount}!`);
+                contributionModal.style.display = 'none';
+            }
+        });
+
+        // Handle Project Update
+        const updateForm = document.getElementById('update-form');
+        updateForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const updateContent = document.getElementById('update-content').value.trim();
+            if (updateContent === '') {
+                alert('Update content cannot be empty.');
+                return;
+            }
+
+            const projects = getProjects();
+            const project = projects.find(p => p.id === currentUpdateProjectId);
+            if (project) {
+                project.updates.push(updateContent);
+                saveProjects(projects);
+                renderProjects();
+                alert('Update posted successfully!');
+                updateModal.style.display = 'none';
+            }
+        });
+
+        // Initial Render
+        document.addEventListener('DOMContentLoaded', renderProjects);
+
+        // Close modal when clicking outside of the modal content
+        window.addEventListener('click', function(event) {
+            if (event.target == contributionModal) {
+                contributionModal.style.display = 'none';
+            }
+            if (event.target == updateModal) {
+                updateModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

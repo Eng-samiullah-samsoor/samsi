@@ -1,102 +1,142 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
 }
 
-#app {
-    max-width: 800px;
-    margin: 20px auto;
+header, footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+main {
     padding: 20px;
+}
+
+h1, h2, h3, h4 {
+    margin-bottom: 10px;
+}
+
+section {
+    margin-bottom: 40px;
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 5px;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
+label {
+    display: block;
+    margin-top: 10px;
 }
 
-header h1 {
-    margin: 0;
-}
-
-header button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-header button:hover {
-    background-color: #0056b3;
-}
-
-main section {
-    margin: 20px 0;
-}
-
-section h2 {
-    margin-bottom: 10px;
-}
-
-#postForm textarea {
+input[type="text"],
+input[type="number"],
+textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    margin-bottom: 10px;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
 }
 
-#postForm button {
-    padding: 5px 10px;
+button {
+    margin-top: 15px;
+    padding: 10px 15px;
     background-color: #28a745;
-    color: #fff;
     border: none;
-    border-radius: 3px;
+    color: #fff;
     cursor: pointer;
+    border-radius: 3px;
 }
 
-#postForm button:hover {
+button:hover {
     background-color: #218838;
 }
 
-#postList, #friendRequestList, #notificationList {
-    list-style: none;
-    padding: 0;
+.project {
+    border-bottom: 1px solid #ccc;
+    padding: 15px 0;
 }
 
-#postList li, #friendRequestList li, #notificationList li {
-    padding: 10px;
-    border: 1px solid #ddd;
+.project:last-child {
+    border-bottom: none;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
     border-radius: 3px;
-    margin-bottom: 10px;
+    overflow: hidden;
+    margin: 10px 0;
 }
 
-.likeBtn, .commentBtn, .acceptBtn, .rejectBtn {
-    margin-top: 10px;
-    padding: 5px 10px;
+.progress {
+    height: 20px;
+    background-color: #28a745;
+    width: 0%;
+}
+
+.contribute-button, .update-button {
     background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+    margin-right: 10px;
 }
 
-.likeBtn:hover, .commentBtn:hover, .acceptBtn:hover, .rejectBtn:hover {
+.contribute-button:hover, .update-button:hover {
     background-color: #0056b3;
 }
 
-.newComment {
-    width: calc(100% - 20px);
-    padding: 5px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+.updates ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 10% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    border-radius: 5px;
+    position: relative;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 95%;
+    }
 }
