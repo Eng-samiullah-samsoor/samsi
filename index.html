@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crowdfunding Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Crowdfunding Platform</h1>
+    </header>
+
+    <section class="create-project">
+        <h2>Create a Project</h2>
+        <form id="createProjectForm">
+            <label for="projectName">Project Name:</label>
+            <input type="text" id="projectName" required>
+
+            <label for="goalAmount">Funding Goal ($):</label>
+            <input type="number" id="goalAmount" required>
+
+            <label for="projectDescription">Project Description:</label>
+            <textarea id="projectDescription" required></textarea>
+
+            <button type="submit">Create Project</button>
+        </form>
+    </section>
+
+    <section class="project-list">
+        <h2>Available Projects</h2>
+        <div id="projectsContainer"></div>
+    </section>
+
+    <script>
+        let projects = [];
+
+        document.getElementById('createProjectForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const projectName = document.getElementById('projectName').value;
+            const goalAmount = parseFloat(document.getElementById('goalAmount').value);
+            const projectDescription = document.getElementById('projectDescription').value;
+
+            const newProject = {
+                name: projectName,
+                goal: goalAmount,
+                description: projectDescription,
+                raised: 0,
+                contributors: []
+            };
+
+            projects.push(newProject);
+            document.getElementById('createProjectForm').reset();
+            displayProjects();
+        });
+
+        function displayProjects() {
+            const projectsContainer = document.getElementById('projectsContainer');
+            projectsContainer.innerHTML = '';
+
+            projects.forEach((project, index) => {
+                const projectElement = document.createElement('div');
+                projectElement.classList.add('project');
+
+                projectElement.innerHTML = `
+                    <h3>${project.name}</h3>
+                    <p><strong>Goal:</strong> $${project.goal}</p>
+                    <p><strong>Raised:</strong> $${project.raised}</p>
+                    <p><strong>Description:</strong> ${project.description}</p>
+                    <form class="contribute-form">
+                        <label for="contribution">Contribute ($):</label>
+                        <input type="number" class="contributionAmount" required>
+                        <button type="submit">Contribute</button>
+                    </form>
+                    <p><strong>Contributors:</strong> ${project.contributors.length}</p>
+                `;
+
+                projectElement.querySelector('.contribute-form').addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    const contributionAmount = parseFloat(this.querySelector('.contributionAmount').value);
+
+                    if (contributionAmount > 0) {
+                        project.raised += contributionAmount;
+                        project.contributors.push(contributionAmount);
+                        displayProjects();
+                    } else {
+                        alert('Please enter a valid contribution amount.');
+                    }
+                });
+
+                projectsContainer.appendChild(projectElement);
+            });
+        }
+    </script>
+</body>
+</html>
